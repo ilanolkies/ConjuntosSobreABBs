@@ -111,7 +111,7 @@ TEST(conjunto_test, test_siguiente_inorder) {
 const int NCLAVES = 1000;
 
 int clave(int i) {
-	return NCLAVES * ((i * i - 100 * i) % NCLAVES) + i;
+    return NCLAVES * ((i * i - 100 * i) % NCLAVES) + i;
 }
 
 TEST(conjunto_test, test_stress) {
@@ -119,53 +119,111 @@ TEST(conjunto_test, test_stress) {
 
     // Insertar
     for (int i = 0; i < NCLAVES; i++) {
-	    int k = clave(i);
-	    ASSERT_EQ(c.cardinal(), i);
-	    ASSERT_FALSE(c.pertenece(k));
-	    c.insertar(k);
-	    ASSERT_TRUE(c.pertenece(k));
+        int k = clave(i);
+        ASSERT_EQ(c.cardinal(), i);
+        ASSERT_FALSE(c.pertenece(k));
+        c.insertar(k);
+        ASSERT_TRUE(c.pertenece(k));
     }
     ASSERT_EQ(c.cardinal(), NCLAVES);
 
     // Insertar de nuevo
     for (int i = 0; i < NCLAVES; i++) {
-	    int k = clave(i);
-	    ASSERT_TRUE(c.pertenece(k));
-	    c.insertar(k);
-	    ASSERT_TRUE(c.pertenece(k));
-	    ASSERT_EQ(c.cardinal(), NCLAVES);
+        int k = clave(i);
+        ASSERT_TRUE(c.pertenece(k));
+        c.insertar(k);
+        ASSERT_TRUE(c.pertenece(k));
+        ASSERT_EQ(c.cardinal(), NCLAVES);
     }
 
     // Eliminar los valores para i par
     for (int i = 0; i < NCLAVES; i++) {
-	    int k = clave(i);
-	    ASSERT_TRUE(c.pertenece(k));
-	    if (i % 2 == 0) {
-	    	c.remover(k);
-	    	ASSERT_FALSE(c.pertenece(k));
-	    }
+        int k = clave(i);
+        ASSERT_TRUE(c.pertenece(k));
+        if (i % 2 == 0) {
+            c.remover(k);
+            ASSERT_FALSE(c.pertenece(k));
+        }
     }
     ASSERT_EQ(c.cardinal(), NCLAVES / 2);
 
     // Eliminar los valores para i impar
     for (int i = 0; i < NCLAVES; i++) {
-	    int k = clave(i);
-	    if (i % 2 == 0) {
-	    	ASSERT_FALSE(c.pertenece(k));
-	    } else {
-	    	ASSERT_TRUE(c.pertenece(k));
-	    	c.remover(k);
-	    	ASSERT_FALSE(c.pertenece(k));
-	    }
+        int k = clave(i);
+        if (i % 2 == 0) {
+            ASSERT_FALSE(c.pertenece(k));
+        } else {
+            ASSERT_TRUE(c.pertenece(k));
+            c.remover(k);
+            ASSERT_FALSE(c.pertenece(k));
+        }
     }
     ASSERT_EQ(c.cardinal(), 0);
 
     // Verificar que no haya valores
     for (int i = 0; i < NCLAVES; i++) {
-	    int k = clave(i);
-	    ASSERT_FALSE(c.pertenece(k));
+        int k = clave(i);
+        ASSERT_FALSE(c.pertenece(k));
     }
 }
 
 /// TODO: Escribir tests de todas las implementaciones
+TEST(mis_tests, tres_tipos_remover) {
+    Conjunto<int> c;
 
+    c.insertar(5);
+    c.insertar(3);
+    c.insertar(2);
+    c.insertar(4);
+    c.insertar(7);
+    c.insertar(6);
+    c.insertar(8);
+
+    ASSERT_EQ(c.cardinal(), 7);
+
+    c.remover(2);
+    ASSERT_FALSE(c.pertenece(2));
+    ASSERT_EQ(c.cardinal(), 6);
+
+    c.remover(3);
+    ASSERT_FALSE(c.pertenece(3));
+    ASSERT_EQ(c.cardinal(), 5);
+
+    c.remover(5);
+    ASSERT_FALSE(c.pertenece(5));
+    ASSERT_EQ(c.cardinal(), 4);
+}
+
+TEST(mis_tests, insertar_duplicado) {
+    Conjunto<int> c;
+
+    c.insertar(5);
+    c.insertar(5);
+
+    ASSERT_EQ(c.cardinal(), 1);
+}
+
+TEST(mis_tests, remover_no_existente) {
+    Conjunto<int> c;
+
+    c.insertar(5);
+    c.remover(2);
+
+    ASSERT_EQ(c.cardinal(), 1);
+}
+
+TEST(mis_tests, remover_de_vacio) {
+    Conjunto<int> c;
+
+    c.remover(2);
+
+    ASSERT_EQ(c.cardinal(), 0);
+}
+
+TEST(mis_tests, pertenece_a_vacio) {
+    Conjunto<int> c;
+
+    c.pertenece(2);
+
+    ASSERT_EQ(c.cardinal(), 0);
+}
